@@ -69,8 +69,10 @@ class MainActivity : AppCompatActivity() {
                 registerForActivityResult(requestPermissionActivityContract) { granted ->
                     if (granted.containsAll(PERMISSIONS)) {
                         // Permissions successfully granted
+                        Log.d("Neel", "onCreate: All permissions granted")
                     } else {
                         // Lack of required permissions
+                        Log.d("Neel", "onCreate: Lacking permission")
                     }
                 }
 
@@ -79,16 +81,18 @@ class MainActivity : AppCompatActivity() {
                     val granted = client.permissionController.getGrantedPermissions(PERMISSIONS)
                     if (granted.containsAll(PERMISSIONS)) {
                         // Permissions already granted
-                        val now: LocalDateTime = LocalDateTime.now()
-                        val yesterday: LocalDateTime = now.minusDays(1)
+                        var now: LocalDateTime = LocalDateTime.now()
+                        now = now.plusDays(2)
+                        val yesterday: LocalDateTime = now.minusDays(2)
                         val response =
                             healthConnectClient.readRecords(
                                 ReadRecordsRequest(
-                                    StepsRecord::class,
+                                    HeartRateRecord::class,
                                     timeRangeFilter = TimeRangeFilter.between(yesterday, now)
                                 )
                             )
-                        Log.d("Neel", "Response: "+response.records.toString())
+                        // FIND results here
+                        Log.d("Neel", "Response: "+response.pageToken)
                         Log.d("Neel", "Yesterday: $yesterday")
                         Log.d("Neel", "Now: $now")
                     } else {
